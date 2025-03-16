@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.*
 
 import com.devproy.pensummovil.Navigation.MyTopAppBar
-import com.devproy.pensummovil.ViewModels.AprobadoViewModel
+import com.devproy.pensummovil.ViewModel.AprobadoViewModel
 import com.devproy.pensummovil.ui.theme.VerdeUnicah
 
 @Composable

@@ -12,15 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.devproy.pensummovil.Pantallas.*
+import com.devproy.pensummovil.ViewModel.AprobadoViewModel
 
 @Composable
 fun AppNavigation(navController: NavHostController){
     val navController = rememberNavController()
+    val aprobadoViewModel: AprobadoViewModel = viewModel ()
 
     Scaffold (
         modifier = Modifier.fillMaxHeight().fillMaxSize()
@@ -31,10 +34,10 @@ fun AppNavigation(navController: NavHostController){
                     Login(navController)
                 }
                 composable("historial_grafico"){
-                    HistorialGrafico()
+                    HistorialGrafico(navController,aprobadoViewModel)
                 }
                 composable("listado_clases"){
-                    ListadoClases()
+                    ListadoClases(aprobadoViewModel)
                 }
                 composable("menu"){
                     MenuPrincipal(navController)

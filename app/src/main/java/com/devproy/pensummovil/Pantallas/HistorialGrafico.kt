@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devproy.pensummovil.Navigation.MyTopAppBar
-import com.devproy.pensummovil.ViewModels.AprobadoViewModel
+import com.devproy.pensummovil.ViewModel.AprobadoViewModel
 import com.devproy.pensummovil.ui.theme.VerdeUnicah
 
 @Composable
