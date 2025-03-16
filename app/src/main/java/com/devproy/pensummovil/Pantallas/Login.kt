@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.devproy.pensummovil.ui.theme.AzulUnicah
-import com.devproy.pensummovil.ui.theme.Blanco
+
 
 // Pantalla de inicio de sesión de usuario
 @Composable
@@ -32,7 +32,7 @@ fun Login(navController: NavHostController) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(Blanco)
+            .background(color=Color.White)
             .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top

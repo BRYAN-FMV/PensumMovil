@@ -7,7 +7,7 @@ val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 val AzulUnicah = Color(0, 76, 190)
 val AmarilloUnicah = Color(243, 178, 21)
-val Blanco = Color(255,255,255)
+val VerdeUnicah = Color(76, 175, 80)
 
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
