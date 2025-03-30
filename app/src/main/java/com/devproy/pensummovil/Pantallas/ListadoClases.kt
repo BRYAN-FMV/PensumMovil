@@ -1,36 +1,46 @@
 package com.devproy.pensummovil.Pantallas
+
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.*
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devproy.pensummovil.Navigation.MyTopAppBar
-import com.devproy.pensummovil.ViewModel.AprobadoViewModel
-import com.devproy.pensummovil.ui.theme.VerdeUnicah
+import com.devproy.pensummovil.ViewModel.*
+import com.devproy.pensummovil.Model.*
 
 @Composable
-fun ListadoClases(viewModel: AprobadoViewModel) {
+fun ListadoClases(
+    claseViewModel: ClaseViewModel = viewModel()
+){
+    //varible de clase
+    val claseState by claseViewModel.claseData.collectAsState()
+
+    LaunchedEffect(Unit) {
+        claseViewModel.obtenerClaseData()
+    }
 
     Scaffold(
-        topBar = { MyTopAppBar(title = "Listado de clases") }
+        topBar = { MyTopAppBar(title = "Historial gráfico") }
     ) { innerPadding ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (viewModel.isChecked.value) {
-                Text("aprobada", fontSize = 20.sp, color = VerdeUnicah)
-            } else {
-                Text("no hay clases aprobadas", fontSize = 20.sp, color = Color.Red)
+        claseState?.result?.let { listaClases ->
+            LazyColumn(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                items(listaClases) { clase ->
+                    Text(text = "Clase: ${clase.nombre_clase}")
+                }
             }
-
+        } ?: run {
+            LazyColumn {
+                item {
+                    Text("No hay clases disponibles")
+                }
+            }
         }
-
     }
 }

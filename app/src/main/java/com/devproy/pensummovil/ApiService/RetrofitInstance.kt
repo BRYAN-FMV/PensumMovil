@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance{
-    private const val BASE_URL = "https//localhost:3011/"
+    private const val BASE_URL = "http//192.168.0.10:3010"
 
     val api: PensumApiService by lazy{
         Retrofit.Builder()
