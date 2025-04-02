@@ -17,7 +17,7 @@ class ClaseViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val claseResponse = RetrofitInstance.api.obtenerClase()
-                _claseData.value = claseResponse // Con el nuevo modelo debe ajustarse correctamente
+                _claseData.value = claseResponse
             } catch (e: Exception) {
                 e.printStackTrace()
             }

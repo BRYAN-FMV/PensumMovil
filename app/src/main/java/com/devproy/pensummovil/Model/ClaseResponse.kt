@@ -9,6 +9,6 @@ data class Clase(
     val nombre_clase: String,
     val creditos: Int,
     val estado: Boolean,
-    val TipoClase: Int // Asegúrate que el nombre coincide con el JSON ("TipoClase")
+    val TipoClase: Int
 )
 
