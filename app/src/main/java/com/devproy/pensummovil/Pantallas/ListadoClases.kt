@@ -12,36 +12,110 @@ import com.devproy.pensummovil.Navigation.MyTopAppBar
 import com.devproy.pensummovil.ViewModel.*
 import com.devproy.pensummovil.Model.*
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ListadoClases(
-    claseViewModel: ClaseViewModel = viewModel()
+    claseViewModel: ClaseViewModel = viewModel(),
+    listadoClaseViewModel: ListadoClaseViewModel = viewModel()
 ){
     //varible de clase
     val claseState by claseViewModel.claseData.collectAsState()
+    //variable de Alumno
+    val alumnoState by listadoClaseViewModel.alumnoData.collectAsState()
+    var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         claseViewModel.obtenerClaseData()
-        println("Datos obtenidos: ${claseViewModel.claseData.value}")
+        listadoClaseViewModel.obtenerAlumnoData("")
+
     }
 
     Scaffold(
         topBar = { MyTopAppBar(title = "Historial gráfico") }
     ) { innerPadding ->
-
-        claseState?.let { resultant ->
-            LazyColumn(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-            ) {
-                items(resultant.result) { clase ->
-                    Text(text = "Clase: ${clase.nombre_clase} ", color = Color.Black)
+        Column(Modifier
+            .padding(innerPadding)
+        ){
+              OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("Ingrese ID del Alumno") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            trailingIcon = {
+                IconButton(onClick = {
+                    if (searchText.isNotEmpty()) {
+                        listadoClaseViewModel.obtenerAlumnoData(searchText)
+                    }
+                }) {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Buscar")
                 }
             }
-        } ?: run {
+        )
+               alumnoState?.let { alumno ->
+                   Row(){
+                       Text(text = "Alumno: ${alumno.nombre}", color = Color.Black)
+                       Spacer(modifier = Modifier.width(25.dp))
+
+                       Text(text = "ID: ${alumno.alumnoId}", color = Color.Black)
+                   }
+                   Column() {
+                      Text(" Aprobado ${alumno.}")
+               }
+
+               claseState?.let { resultant ->
+                   LazyColumn(
+                       Modifier
+                           .fillMaxSize()
+                           .padding(innerPadding),
+                   ) {
+                       item{
+                           Card(Modifier
+                               .fillMaxWidth()
+                               .padding(15.dp)
+                               .height(75.dp)) {
+                               Text("esto en un card")
+
+                           }
+                       }
+                   }
+               }
+           }
+            alumnoState?.let { alumno ->
+                    Row(){
+                        Text(text = "Alumno: ${alumno.nombre}", color = Color.Black)
+                        Spacer(modifier = Modifier.width(25.dp))
+
+                        Text(text = "ID: ${alumno.alumnoId}", color = Color.Black)
+                    }
+            }
+
+            claseState?.let { resultant ->
+                LazyColumn(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                ) {
+                    item{
+                        Card(Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp)
+                            .height(75.dp)) {
+                            Text("esto en un card")
+
+                        }
+                    }
+                    items(resultant.result) { clase ->
+                        Text(text = "Clase: ${clase.nombre_clase} ", color = Color.Black)
+                        Text("ID : ${clase.id_clase}")
+                    }
+                }
+            }
         }
     }
-}
+
+

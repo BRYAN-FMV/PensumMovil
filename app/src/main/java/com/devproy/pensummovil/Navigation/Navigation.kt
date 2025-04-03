@@ -21,6 +21,7 @@ fun AppNavigation(navController: NavHostController){
     val navController = rememberNavController()
     val aprobadoViewModel: AprobadoViewModel = viewModel ()
     val claseViewModel: ClaseViewModel = viewModel ()
+    val alumnoViewModel: AlumnoViewModel = viewModel()
 
     Scaffold (
         modifier = Modifier.fillMaxHeight().fillMaxSize()
