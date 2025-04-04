@@ -1,5 +1,6 @@
 package com.devproy.pensummovil.Navigation
 
+import LoginViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.navigation.compose.composable
 import com.devproy.pensummovil.Pantallas.*
 import com.devproy.pensummovil.ViewModel.*
 import com.devproy.pensummovil.ViewModel.*
+import kotlin.math.log
 
 @Composable
 fun AppNavigation(navController: NavHostController){
@@ -22,6 +24,7 @@ fun AppNavigation(navController: NavHostController){
     val aprobadoViewModel: AprobadoViewModel = viewModel ()
     val claseViewModel: ClaseViewModel = viewModel ()
     val alumnoViewModel: AlumnoViewModel = viewModel()
+    val loginViewModel: LoginViewModel = viewModel ()
 
     Scaffold (
         modifier = Modifier.fillMaxHeight().fillMaxSize()
@@ -29,7 +32,7 @@ fun AppNavigation(navController: NavHostController){
         Box (modifier = Modifier.fillMaxHeight().padding(innerPadding)){
             NavHost(navController, startDestination = "Login"){
                 composable("Login"){
-                    Login(navController)
+                    Login(loginViewModel, navController)
                 }
                 composable("historial_grafico"){
                     HistorialGrafico(navController,aprobadoViewModel)

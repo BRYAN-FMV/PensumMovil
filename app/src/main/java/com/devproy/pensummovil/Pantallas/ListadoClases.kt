@@ -21,101 +21,96 @@ import androidx.compose.ui.graphics.Color
 fun ListadoClases(
     claseViewModel: ClaseViewModel = viewModel(),
     listadoClaseViewModel: ListadoClaseViewModel = viewModel()
-){
-    //varible de clase
+) {
+    // Variables de estado
     val claseState by claseViewModel.claseData.collectAsState()
-    //variable de Alumno
     val alumnoState by listadoClaseViewModel.alumnoData.collectAsState()
+    val aprobadoState by listadoClaseViewModel.aprobadoData.collectAsState()  // Estado para clases aprobadas
     var searchText by remember { mutableStateOf("") }
 
+    // Lógica de carga inicial
     LaunchedEffect(Unit) {
         claseViewModel.obtenerClaseData()
-        listadoClaseViewModel.obtenerAlumnoData("")
-
+        listadoClaseViewModel.obtenerAlumnoData("") // Cargar alumno con ID vacío por defecto
     }
 
+    // Estructura de la pantalla
     Scaffold(
-        topBar = { MyTopAppBar(title = "Historial gráfico") }
+        topBar = { MyTopAppBar(title = "Clases aprobadas") }
     ) { innerPadding ->
-        Column(Modifier
-            .padding(innerPadding)
-        ){
-              OutlinedTextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Ingrese ID del Alumno") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            trailingIcon = {
-                IconButton(onClick = {
-                    if (searchText.isNotEmpty()) {
-                        listadoClaseViewModel.obtenerAlumnoData(searchText)
-                    }
-                }) {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = "Buscar")
-                }
-            }
-        )
-               alumnoState?.let { alumno ->
-                   Row(){
-                       Text(text = "Alumno: ${alumno.nombre}", color = Color.Black)
-                       Spacer(modifier = Modifier.width(25.dp))
-
-                       Text(text = "ID: ${alumno.alumnoId}", color = Color.Black)
-                   }
-                   Column() {
-                      Text(" Aprobado ${alumno.}")
-               }
-
-               claseState?.let { resultant ->
-                   LazyColumn(
-                       Modifier
-                           .fillMaxSize()
-                           .padding(innerPadding),
-                   ) {
-                       item{
-                           Card(Modifier
-                               .fillMaxWidth()
-                               .padding(15.dp)
-                               .height(75.dp)) {
-                               Text("esto en un card")
-
-                           }
-                       }
-                   }
-               }
-           }
-            alumnoState?.let { alumno ->
-                    Row(){
-                        Text(text = "Alumno: ${alumno.nombre}", color = Color.Black)
-                        Spacer(modifier = Modifier.width(25.dp))
-
-                        Text(text = "ID: ${alumno.alumnoId}", color = Color.Black)
-                    }
-            }
-
-            claseState?.let { resultant ->
-                LazyColumn(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                ) {
-                    item{
-                        Card(Modifier
-                            .fillMaxWidth()
-                            .padding(15.dp)
-                            .height(75.dp)) {
-                            Text("esto en un card")
-
+        Column(
+            Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            // Campo de búsqueda por ID de alumno
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                label = { Text("Ingrese ID del Alumno") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = {
+                        if (searchText.isNotEmpty()) {
+                            listadoClaseViewModel.obtenerAlumnoData(searchText) // Obtener alumno por ID
                         }
+                    }) {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "Buscar")
                     }
-                    items(resultant.result) { clase ->
-                        Text(text = "Clase: ${clase.nombre_clase} ", color = Color.Black)
-                        Text("ID : ${clase.id_clase}")
+                }
+            )
+
+            // Mostrar la información del alumno
+            alumnoState?.let { alumno ->
+                OutlinedCard (Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth()
+                ) {
+                    Row(Modifier
+                        .padding(10.dp)
+                    ){
+                        Text(text = "Alumno: ${alumno.nombre}",
+                            color = Color.Black,
+                            modifier = Modifier
+                                .padding(10.dp))
+                        Spacer(modifier = Modifier.width(25.dp))
+                        Text(text = "ID: ${alumno.alumnoId}",
+                            color = Color.Black,
+                            modifier = Modifier
+                                .padding(10.dp))
+                    }
+
+                }
+
+                // Mostrar las clases aprobadas
+                aprobadoState?.let { aprobado ->
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(text = "Clases Aprobadas", fontSize = 15.sp)
+
+                        if (aprobado.result.isNotEmpty()) {
+                            // Lista de clases aprobadas
+                            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                items(aprobado.result) { clase ->
+                                    Text(
+                                        text = "Clase ID: ${clase.id_clase}",
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                    HorizontalDivider(thickness = 1.dp)
+                                }
+                            }
+                        } else {
+                            Text(text = "No tiene clases aprobadas.", color = Color.Gray)
+                        }
                     }
                 }
             }
         }
     }
+}
+
+
 
 
