@@ -11,10 +11,10 @@ import kotlinx.coroutines.Dispatchers
 class LoginViewModel : ViewModel() {
 
     private val _loginResult = MutableStateFlow<LoginResponse?>(null)
-    val loginResult = _loginResult.asStateFlow() // 🔹 Exponer como StateFlow
+    val loginResult = _loginResult.asStateFlow()
 
     fun login(userId: String, password: String) {
-        val user = UserResponse(userId, password)
+        val user = UserResponse(userId, password,)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -28,5 +28,8 @@ class LoginViewModel : ViewModel() {
                 _loginResult.value = null
             }
         }
+    }
+    fun clearSession() {
+        _loginResult.value = null
     }
 }

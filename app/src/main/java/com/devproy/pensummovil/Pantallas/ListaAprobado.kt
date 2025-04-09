@@ -1,26 +1,46 @@
 package com.devproy.pensummovil.Pantallas
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.*
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.devproy.pensummovil.Navigation.MyTopAppBar
-import com.devproy.pensummovil.ViewModel.*
-import com.devproy.pensummovil.Model.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.devproy.pensummovil.ui.theme.AzulUnicah
+import com.devproy.pensummovil.Model.Clase
+import com.devproy.pensummovil.Navigation.MyTopAppBar
+import com.devproy.pensummovil.ViewModel.ListadoClaseViewModel
 
 @Composable
-fun ListadoClases(
+fun ListaAprobado(
     listadoClaseViewModel: ListadoClaseViewModel = viewModel(),
     navController: NavController,
     userId: String
@@ -28,14 +48,14 @@ fun ListadoClases(
     // Variables de estado
 
     val alumnoState by listadoClaseViewModel.alumnoData.collectAsState()
-    val aprobadoState by listadoClaseViewModel.aprobadoData.collectAsState()  // Estado para clases aprobadas
-    var searchText by remember { mutableStateOf("") }
+    val aprobadoState by listadoClaseViewModel.aprobadoData.collectAsState()
     val claseData by listadoClaseViewModel.claseData.collectAsState()
     var claseNombre by remember { mutableStateOf<Clase?>(null) }
 
     // Lógica de carga inicial
-    LaunchedEffect(Unit) {
-        listadoClaseViewModel.obtenerAlumnoData("") // Cargar alumno con ID vacío por defecto
+    LaunchedEffect(userId) {
+        listadoClaseViewModel.obtenerAlumnoData(userId)
+        listadoClaseViewModel.obtenerClasesAprobadas(userId)
     }
 
     // Estructura de la pantalla
@@ -47,29 +67,6 @@ fun ListadoClases(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            // Campo de búsqueda por ID de alumno
-            OutlinedTextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                label = { Text("Ingrese ID del Alumno") },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = AzulUnicah
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                singleLine = true,
-                trailingIcon = {
-                    IconButton(onClick = {
-                        if (searchText.isNotEmpty()) {
-                            listadoClaseViewModel.obtenerAlumnoData(searchText) // Obtener alumno por ID
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Buscar")
-                    }
-                }
-            )
-
             // Mostrar la información del alumno
             alumnoState?.let { alumno ->
                 OutlinedCard (Modifier
@@ -131,7 +128,3 @@ fun ListadoClases(
         }
     }
 }
-
-
-
-

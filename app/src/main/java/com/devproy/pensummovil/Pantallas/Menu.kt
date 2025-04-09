@@ -6,9 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,9 +29,9 @@ import com.devproy.pensummovil.Navigation.MyTopAppBar
 import com.devproy.pensummovil.ui.theme.*
 
 @Composable
-fun MenuPrincipal (navController: NavHostController){
+fun MenuPrincipal (navController: NavHostController, userId: String, roleId: String){
     Scaffold(
-        topBar = { MyTopAppBar(title = "Menu principal") }
+        topBar = { MyTopAppBar(title = "Menu principal", navController) }
     ) { innepadding ->
 
         Column(Modifier
@@ -37,30 +39,45 @@ fun MenuPrincipal (navController: NavHostController){
             .background(color = Color.White)
             .padding(15.dp)
             .padding(innepadding)) {
-            Row(Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
-                .clickable(onClick = {navController.navigate("historial_grafico")}),
-                verticalAlignment = Alignment.CenterVertically){
-                Image(
-                    painter = painterResource(id = R.drawable.historialgrafico),
-                    contentDescription = "historial grafico icono"
-                )
-                Text("Historial grafico", fontSize = 20.sp, modifier = Modifier.padding(start = 10.dp))
+            Text("Bienvenido, $userId", fontSize = 20.sp)
+            if(roleId == "1"){
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    .clickable(onClick = {navController.navigate("listado_clases/$userId")}),
+                    verticalAlignment = Alignment.CenterVertically){
+                    Image(
+                        painter = painterResource(id = R.drawable.listado),
+                        contentDescription = "listado de clases icono"
+                    )
+                    Text("listado de clases", fontSize = 20.sp, modifier = Modifier.padding(start = 10.dp))
+                }
+            }else{
+                Spacer(Modifier.width(35.dp))
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    .clickable(onClick = {navController.navigate("historial_grafico/$userId")}),
+                    verticalAlignment = Alignment.CenterVertically){
+                    Image(
+                        painter = painterResource(id = R.drawable.historialgrafico),
+                        contentDescription = "historial grafico icono"
+                    )
+                    Text("Historial grafico", fontSize = 20.sp, modifier = Modifier.padding(start = 10.dp))
+                }
+                HorizontalDivider(thickness = 1.dp)
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    .clickable(onClick = {navController.navigate("lista_aprobado/$userId")}),
+                    verticalAlignment = Alignment.CenterVertically){
+                    Image(
+                        painter = painterResource(id = R.drawable.listado),
+                        contentDescription = "listado de clases icono"
+                    )
+                    Text("listado de clases", fontSize = 20.sp, modifier = Modifier.padding(start = 10.dp))
+                }
             }
-            HorizontalDivider(thickness = 1.dp)
-            Row(Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
-                .clickable(onClick = {navController.navigate("listado_clases")}),
-                verticalAlignment = Alignment.CenterVertically){
-                Image(
-                    painter = painterResource(id = R.drawable.listado),
-                    contentDescription = "listado de clases icono"
-                )
-                Text("listado de clases", fontSize = 20.sp, modifier = Modifier.padding(start = 10.dp))
-            }
-            HorizontalDivider(thickness = 1.dp)
         }
     }
 }

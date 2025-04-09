@@ -16,11 +16,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,19 +45,24 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.devproy.pensummovil.ui.theme.AzulUnicah
 import com.devproy.pensummovil.R
+import com.devproy.pensummovil.ui.theme.AmarilloUnicah
 
 // Pantalla de inicio de sesión de usuario
 @Composable
 fun Login(
     loginViewModel: LoginViewModel = viewModel(),
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val context = LocalContext.current
     var userId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val loginResult by loginViewModel.loginResult.collectAsState()
     var passwordVisible by remember { mutableStateOf(false) }
-    var loginError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") } // Estado para el mensaje de error
+
+    LaunchedEffect(Unit) {
+        loginViewModel.clearSession()
+    }
 
     Column(
         modifier = Modifier
@@ -71,10 +79,14 @@ fun Login(
                 .height(250.dp)
                 .padding(top = 3.dp, bottom = 0.dp)
         )
+
         OutlinedTextField(
             value = userId,
             onValueChange = { userId = it },
-            label = { Text("User ID") },
+            label = { Text("Usuario") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = AmarilloUnicah
+            ),
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -84,7 +96,10 @@ fun Login(
             value = password,
             onValueChange = { password = it },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            label = { Text("Password") },
+            label = { Text("Contraseña") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = AmarilloUnicah
+            ),
             trailingIcon = {
                 val image = if (passwordVisible) R.drawable.visibilityoff else R.drawable.visibility
                 val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
@@ -101,8 +116,7 @@ fun Login(
 
         Spacer(modifier = Modifier.height(15.dp))
 
-
-        //BOTÓN CON LÓGICA DE LOGIN Y NAVEGACIÓN
+        // BOTÓN CON LÓGICA DE LOGIN
         Button(
             onClick = {
                 loginViewModel.login(userId, password)
@@ -115,26 +129,30 @@ fun Login(
             Text("INGRESAR", fontSize = 15.sp)
         }
 
-        // NAVEGACIÓN SI LOGIN ES EXITOSO
-        LaunchedEffect(loginResult) {
-            loginResult?.let {
-                if (it.token != null) {
-                    Toast.makeText(context, "Bienvenido ${it.userId}", Toast.LENGTH_LONG).show()
-                    navController.navigate("menu")
-                }else{
-                    loginError = true
-                }
-            }
-        }
-        if (loginError) {
+        // MENSAJE DE ERROR
+        if (errorMessage.isEmpty() || errorMessage.isNullOrEmpty()) {
             Text(
-                text = "Usuario o contraseña incorrectos",
+                text = errorMessage,
                 color = Color.Red,
+                fontSize = 14.sp,
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
+
+        // NAVEGACIÓN SI LOGIN ES EXITOSO
+        LaunchedEffect(loginResult) {
+            loginResult?.let { response ->
+                if (response.token != null) { // Si el inicio de sesión es exitoso
+                    navController.navigate("menu/${response.userId}/${response.RoleId}") // Pasar RoleId
+                    errorMessage = "" // Limpiar mensaje de error
+                } else {
+                    errorMessage = "Usuario o contraseña incorrectos. Intente de nuevo." // Mostrar mensaje de error
+                }
+            }
+        }
     }
 }
+
 
 
 
